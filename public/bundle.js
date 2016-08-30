@@ -110,21 +110,29 @@
 	/*require.ensure('./tags/cart.tag',(e)=>{
 		console.log(e);
 	})*/
-	function loadpart2(cb) {
+	function loadpart2(module) {
 		return new Promise(function (resolve, reject) {
-			__webpack_require__.e/* nsure */(1, function () {
+			__webpack_require__.e/* nsure */(1, function (require) {
+				switch (module) {
+					case 'CART':
+						__webpack_require__(4);
+						break;
+					case 'CO':
+						__webpack_require__(5);
+						break;
+				}
 				resolve();
 			});
 		});
 	}
 	_riot2.default.route('/cart', function () {
-		loadpart2().then(function () {
+		loadpart2('CART').then(function () {
 			document.body.appendChild(document.createElement('cart'));
 			_riot2.default.mount('cart');
 		});
 	});
 	_riot2.default.route('/co', function () {
-		loadpart2().then(function () {
+		loadpart2('CO').then(function () {
 			document.body.appendChild(document.createElement('co'));
 			_riot2.default.mount('co');
 		});

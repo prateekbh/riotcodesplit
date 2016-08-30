@@ -5,9 +5,8 @@ webpackJsonp([1],{
 
 	var riot = __webpack_require__(1);
 
-	var crt = riot.tag2('cart', '<h1>hello cart</h1>', '', '', function(opts) {
+	riot.tag2('cart', '<h1>hello cart</h1>', '', '', function(opts) {
 	});
-	console.log('built',crt);
 
 /***/ },
 
