@@ -4,17 +4,21 @@ module.exports = {
     entry: './index',
     output: {
         path: __dirname + '/public',
+        publicPath: '/public/',
         filename: 'bundle.js'
     },
     module: {
         loaders: [
           { 
-          	test: /\.tags$|\.tag$/, 
+          	test: /\.js$/, 
           	exclude: /node_modules/, 
-          	loader: 'babel-loader'
+          	loader: 'babel-loader',
+            query: {
+              presets: ['es2015']
+            }
         	},
       		{
-      			test: /\.tags$|\.tag$/, 
+      			test: /\.tag$/, 
       	  	loader: 'tag'
       		}
         ]
