@@ -6,7 +6,7 @@
 		<div class="info">
 			<div class="name">
 				<span class="label">Name: </span>
-				<span class="desc">{productDesc.name}</span>
+				<span class="desc">{productDesc.title}</span>
 			</div>
 			<div class="price">
 				<span class="label">Price: </span>
