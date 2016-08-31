@@ -91,3 +91,23 @@ product .info{
 product .label{
 	font-weight: 700;
 }
+
+@media (max-width: 632px) and (orientation: portrait) {
+	product .productinfo{
+		display: block;
+	}
+	product .info{
+		padding: 16px;
+		font-size: 14px;
+	}
+	browse .product{
+		flex-basis: 100%;
+		max-width: 100%;
+	}
+	.homelinks{
+		display: block;
+	}
+	.homelink{
+		margin-bottom: 48px;
+	}
+}

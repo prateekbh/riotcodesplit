@@ -111,8 +111,8 @@
 	function loadPrimaryChunk() {
 		return new Promise(function (resolve, reject) {
 			//this line ensures cart and co tags are bundled into one file
-			__webpack_require__.e/* nsure */(2, function (require) {
-				__webpack_require__(6);
+			__webpack_require__.e/* nsure */(1, function (require) {
+				__webpack_require__(4);
 				resolve();
 			});
 		});
@@ -122,14 +122,14 @@
 	function loadSecondChunk(module) {
 		return new Promise(function (resolve, reject) {
 			//this line ensures cart and co tags are bundled into one file
-			__webpack_require__.e/* nsure */(3, function (require) {
+			__webpack_require__.e/* nsure */(2, function (require) {
 				switch (module) {
 					case 'BROWSE':
 						//till we do this the tag will not be executed
-						__webpack_require__(7);
+						__webpack_require__(5);
 						break;
 					case 'PRODUCT':
-						__webpack_require__(9);
+						__webpack_require__(6);
 						break;
 				}
 				resolve();
