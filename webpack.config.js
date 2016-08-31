@@ -4,7 +4,7 @@ module.exports = {
   entry: './index',
   output: {
     path: __dirname + '/public',
-    publicPath: './public/',
+    publicPath: '/riotcodesplit/public/',
     filename: 'bundle.js'
   },
   module: {
