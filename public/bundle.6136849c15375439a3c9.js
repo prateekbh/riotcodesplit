@@ -73,7 +73,7 @@
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
 
-/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".bundle.js";
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".bundle." + "6136849c15375439a3c9" + ".js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -101,66 +101,44 @@
 
 	var _riot2 = _interopRequireDefault(_riot);
 
-	var _header = __webpack_require__(3);
+	var _home = __webpack_require__(3);
 
-	var _header2 = _interopRequireDefault(_header);
+	var _home2 = _interopRequireDefault(_home);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	//function to load routes from primary chunk
-	function loadPrimaryChunk() {
+	/*require.ensure('./tags/cart.tag',(e)=>{
+		console.log(e);
+	})*/
+	function loadpart2(module) {
 		return new Promise(function (resolve, reject) {
-			//this line ensures cart and co tags are bundled into one file
-			__webpack_require__.e/* nsure */(2, function (require) {
-				__webpack_require__(6);
-				resolve();
-			});
-		});
-	}
-
-	//function to load routes from secondary chunk
-	function loadSecondChunk(module) {
-		return new Promise(function (resolve, reject) {
-			//this line ensures cart and co tags are bundled into one file
-			__webpack_require__.e/* nsure */(3, function (require) {
+			__webpack_require__.e/* nsure */(1, function (require) {
 				switch (module) {
-					case 'BROWSE':
-						//till we do this the tag will not be executed
-						__webpack_require__(7);
+					case 'CART':
+						__webpack_require__(4);
 						break;
-					case 'PRODUCT':
-						__webpack_require__(9);
+					case 'CO':
+						__webpack_require__(5);
 						break;
 				}
 				resolve();
 			});
 		});
 	}
-
-	//router configuration
-	var $app = document.querySelector('.app-root');
-
-	_riot2.default.route('/', function () {
-		loadPrimaryChunk().then(function () {
-			$app.innerHTML = "<home></home>";
-			_riot2.default.mount('home');
+	_riot2.default.route('/cart', function () {
+		loadpart2('CART').then(function () {
+			document.body.appendChild(document.createElement('cart'));
+			_riot2.default.mount('cart');
 		});
 	});
-
-	_riot2.default.route('/browse/*', function (keyword) {
-		loadSecondChunk('BROWSE').then(function () {
-			$app.innerHTML = "<browse category='" + keyword + "'></browse>";
-			_riot2.default.mount('browse');
-		});
-	});
-
-	_riot2.default.route('/product/*/*', function (category, name) {
-		loadSecondChunk('PRODUCT').then(function () {
-			$app.innerHTML = "<product cat='" + category + "' name='" + name + "'></product>";
-			_riot2.default.mount('product');
+	_riot2.default.route('/co', function () {
+		loadpart2('CO').then(function () {
+			document.body.appendChild(document.createElement('co'));
+			_riot2.default.mount('co');
 		});
 	});
 	_riot2.default.route.start(true);
+	_riot2.default.route.base('/');
 	_riot2.default.mount('*');
 
 /***/ },
@@ -2852,7 +2830,14 @@
 
 	var riot = __webpack_require__(1);
 
-	riot.tag2('header', '<div class="nav"> <svg fill="#000000" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"> <path d="M0 0h24v24H0z" fill="none"></path> <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path> </svg> </div> <div class="name"> <h1><a href="#">Riot Shop</a></h1> </div>', '', '', function(opts) {
+	riot.tag2('home', '<h1 onclick="{gocart}">Go Cart</h1> <h1 onclick="{goco}">Go Checkout</h1>', '', '', function(opts) {
+			this.gocart=function(){
+				riot.route('/cart');
+			}
+
+			this.goco=function(){
+				riot.route('/co');
+			}
 	});
 
 /***/ }
