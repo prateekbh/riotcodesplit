@@ -93,8 +93,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */,
-/* 1 */,
-/* 2 */
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* Riot v2.6.2, @license MIT */
@@ -2760,7 +2759,7 @@
 	  /* istanbul ignore next */
 	  if (typeof exports === T_OBJECT)
 	    module.exports = riot
-	  else if ("function" === T_FUNCTION && typeof __webpack_require__(3) !== T_UNDEF)
+	  else if ("function" === T_FUNCTION && typeof __webpack_require__(2) !== T_UNDEF)
 	    !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return riot }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))
 	  else
 	    window.riot = riot
@@ -2769,7 +2768,7 @@
 
 
 /***/ },
-/* 3 */
+/* 2 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -2777,8 +2776,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
+/* 3 */,
 /* 4 */,
-/* 5 */,
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var riot = __webpack_require__(1);
+
+	riot.tag2('header', '<div class="nav"> <svg fill="#000000" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"> <path d="M0 0h24v24H0z" fill="none"></path> <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path> </svg> </div> <div class="name"> <h1><a href="#">Riot Shop</a></h1> </div>', '', '', function(opts) {
+	});
+
+/***/ },
 /* 6 */
 /***/ function(module, exports) {
 

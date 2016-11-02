@@ -4,7 +4,7 @@ webpackJsonp([1],[
 
 	'use strict';
 
-	var _browse = __webpack_require__(4);
+	var _browse = __webpack_require__(3);
 
 	var _browse2 = _interopRequireDefault(_browse);
 
@@ -13,11 +13,10 @@ webpackJsonp([1],[
 /***/ },
 /* 1 */,
 /* 2 */,
-/* 3 */,
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var riot = __webpack_require__(2);
+	var riot = __webpack_require__(1);
 
 	riot.tag2('browse', '<ul class="productgrid"> <li class="product" each="{product in products}"> <a href="/#product/{category}/{product.name}"> <img class="productpic" riot-src="https://shop.polymer-project.org{product.image}" height="300" width="300"> <div class="producttitle">{product.title}</div> </a> </li> </ul>', '', '', function(opts) {
 			this.products=[];
