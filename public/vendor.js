@@ -17,7 +17,10 @@
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, __webpack_require__);
-
+/******/ 		if(moreModules[0]) {
+/******/ 			installedModules[0] = 0;
+/******/ 			return __webpack_require__(0);
+/******/ 		}
 /******/ 	};
 
 /******/ 	// The module cache
@@ -27,7 +30,7 @@
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		0:0
+/******/ 		3:0
 /******/ 	};
 
 /******/ 	// The require function
@@ -73,7 +76,7 @@
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
 
-/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".bundle.js";
+/******/ 			script.src = __webpack_require__.p + "" + ({"0":"app","1":"browse","2":"home"}[chunkId]||chunkId) + "-" + chunkId + ".chunk.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -85,93 +88,20 @@
 /******/ 	__webpack_require__.c = installedModules;
 
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/public/";
-
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	__webpack_require__.p = "";
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */
+/* 0 */,
+/* 1 */,
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	var _riot = __webpack_require__(1);
-
-	var _riot2 = _interopRequireDefault(_riot);
-
-	var _header = __webpack_require__(3);
-
-	var _header2 = _interopRequireDefault(_header);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	//function to load routes from primary chunk
-	function loadPrimaryChunk() {
-		return new Promise(function (resolve, reject) {
-			//this line ensures cart and co tags are bundled into one file
-			__webpack_require__.e/* nsure */(1, function (require) {
-				__webpack_require__(4);
-				resolve();
-			});
-		});
-	}
-
-	//function to load routes from secondary chunk
-	function loadSecondChunk(module) {
-		return new Promise(function (resolve, reject) {
-			//this line ensures cart and co tags are bundled into one file
-			__webpack_require__.e/* nsure */(2, function (require) {
-				switch (module) {
-					case 'BROWSE':
-						//till we do this the tag will not be executed
-						__webpack_require__(5);
-						break;
-					case 'PRODUCT':
-						__webpack_require__(6);
-						break;
-				}
-				resolve();
-			});
-		});
-	}
-
-	//router configuration
-	var $app = document.querySelector('.app-root');
-
-	_riot2.default.route('/', function () {
-		loadPrimaryChunk().then(function () {
-			$app.innerHTML = "<home></home>";
-			_riot2.default.mount('home');
-		});
-	});
-
-	_riot2.default.route('/browse/*', function (keyword) {
-		loadSecondChunk('BROWSE').then(function () {
-			$app.innerHTML = "<browse category='" + keyword + "'></browse>";
-			_riot2.default.mount('browse');
-		});
-	});
-
-	_riot2.default.route('/product/*/*', function (category, name) {
-		loadSecondChunk('PRODUCT').then(function () {
-			$app.innerHTML = "<product cat='" + category + "' name='" + name + "'></product>";
-			_riot2.default.mount('product');
-		});
-	});
-	_riot2.default.route.start(true);
-	_riot2.default.mount('*');
-
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* Riot v2.6.1, @license MIT */
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* Riot v2.6.2, @license MIT */
 
 	;(function(window, undefined) {
 	  'use strict';
-	var riot = { version: 'v2.6.1', settings: {} },
+	var riot = { version: 'v2.6.2', settings: {} },
 	  // be aware, internal usage
 	  // ATTENTION: prefix the global dynamic variables with `__`
 
@@ -1736,6 +1666,8 @@
 	        instance = new mix()
 	      } else instance = mix
 
+	      var proto = Object.getPrototypeOf(instance)
+
 	      // build multilevel prototype inheritance chain property list
 	      do props = props.concat(Object.getOwnPropertyNames(obj || instance))
 	      while (obj = Object.getPrototypeOf(obj || instance))
@@ -1746,7 +1678,7 @@
 	        // allow mixins to override other properties/parent mixins
 	        if (key != 'init') {
 	          // check for getters/setters
-	          var descriptor = Object.getOwnPropertyDescriptor(instance, key)
+	          var descriptor = Object.getOwnPropertyDescriptor(instance, key) || Object.getOwnPropertyDescriptor(proto, key)
 	          var hasGetterSetter = descriptor && (descriptor.get || descriptor.set)
 
 	          // apply method only if it does not already exist on the instance
@@ -1779,7 +1711,7 @@
 	          self.mixin(globalMixin[i])
 
 	    // children in loop should inherit from true parent
-	    if (self._parent) {
+	    if (self._parent && self._parent.root.isLoop) {
 	      inheritFrom(self._parent)
 	    }
 
@@ -2500,9 +2432,7 @@
 	 * @returns { Object } child instance
 	 */
 	function inherit(parent) {
-	  function Child() {}
-	  Child.prototype = parent
-	  return new Child()
+	  return Object.create(parent || null)
 	}
 
 	/**
@@ -2830,7 +2760,7 @@
 	  /* istanbul ignore next */
 	  if (typeof exports === T_OBJECT)
 	    module.exports = riot
-	  else if ("function" === T_FUNCTION && typeof __webpack_require__(2) !== T_UNDEF)
+	  else if ("function" === T_FUNCTION && typeof __webpack_require__(3) !== T_UNDEF)
 	    !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return riot }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))
 	  else
 	    window.riot = riot
@@ -2839,7 +2769,7 @@
 
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -2847,13 +2777,134 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/* 4 */,
+/* 5 */,
+/* 6 */
+/***/ function(module, exports) {
 
-	var riot = __webpack_require__(1);
+	'use strict';
 
-	riot.tag2('header', '<div class="nav"> <svg fill="#000000" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"> <path d="M0 0h24v24H0z" fill="none"></path> <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path> </svg> </div> <div class="name"> <h1><a href="#">Riot Shop</a></h1> </div>', '', '', function(opts) {
+	riot.tag2('navigate', '<a href="{document.querySelector(\'router\').getBasePath()+opts.to}" onclick="{nagivateToRoute}"><yield></yield></a>', '', '', function (opts) {
+			var self = this;
+			this.nagivateToRoute = function (e) {
+					e.preventDefault();
+					riot.route(self.opts.to, self.opts.title || null, self.opts.replace ? true : false);
+			};
 	});
+	riot.tag2('route', '<yield></yield>', '', '', function (opts) {
+			var _this = this;
+
+			this.on('mount', function (e) {
+					if (Object.keys(_this.tags).length === 0) {
+							_this.parent && _this.parent.setRoute && _this.parent.setRoute(_this.opts.path, _this.opts.component);
+					}
+			});
+
+			this.setRoute = function (path, component) {
+					this.parent && this.parent.setRoute && this.parent.setRoute(this.opts.path + path, component);
+			};
+	});
+	riot.tag2('router', '<div class="route-container"><yield></yield></div><div class="riot-root"></div>', '', '', function (opts) {
+			var _this2 = this;
+
+			var self = this;
+			var $appRoot = null;
+			var currTag = null;
+
+			var routeParams = {};
+
+			function unmountCurrRoute() {
+					if (currTag && currTag.unmount) {
+							currTag.unmount();
+					}
+			}
+
+			function createRouteWithTagName(tagName) {
+
+					var tag = '<' + tagName + ' class="route-' + tagName + '"></' + tagName + '>';
+
+					unmountCurrRoute();
+
+					$appRoot.innerHTML = tag;
+					var mountedTag;
+					try {
+							mountedTag = riot.mount(tagName + '.route-' + tagName, routeParams);
+					} catch (e) {
+
+							setTimeout(function () {
+									throw e;
+							}, 0);
+					}
+					if (!mountedTag || mountedTag.length === 0) {
+							self.trigger('tagNotFound', tagName);
+							if (self.opts['onTagnotfound'] && self.opts['onTagnotfound'] instanceof Function) {
+									self.opts['onTagnotfound'](tagName);
+							}
+					} else {
+							self.trigger('routeChanged', tagName);
+							if (self.opts['onRoutechange'] && self.opts['onRoutechange'] instanceof Function) {
+									self.opts['onRoutechange'](tagName);
+							}
+							currTag = mountedTag[0];
+					}
+			}
+
+			function changeRoute(newRoute) {
+					if (typeof newRoute === 'string') {
+							createRouteWithTagName(newRoute);
+					} else if (window.Promise && newRoute instanceof window.Promise) {
+							newRoute.then(function (tagName) {
+									createRouteWithTagName(tagName);
+							});
+					}
+			}
+
+			this.setRoute = function (path, component) {
+					(function (path, component) {
+
+							var tokenRegExp = /:([a-z]*)/ig;
+
+							var params = path.match(tokenRegExp);
+							params = params && params.map(function (param) {
+									return param.length > 0 ? param.substring(1) : '';
+							}) || params;
+
+							path = path.replace(tokenRegExp, '*');
+
+							riot.route(path, function () {
+									var _arguments = arguments;
+
+
+									routeParams = {};
+
+									params && params.forEach(function (param, index) {
+											routeParams[param] = _arguments[index];
+									});
+
+									changeRoute(component);
+							});
+
+							riot.route.start(true);
+					})(path, component);
+			};
+
+			this.on('mount', function (e) {
+
+					if (!_this2.opts.showRoutes) {
+							var routeContainer = _this2.root.querySelector('.route-container');
+							routeContainer.remove && routeContainer.remove();
+					}
+					$appRoot = _this2.root.querySelector('.riot-root');
+
+					_this2.opts.baseRoute && riot.route.base(_this2.opts.baseRoute);
+
+					_this2.root.getBasePath = function () {
+							return self.opts.baseRoute || '#';
+					};
+			});
+	});
+	//# sourceMappingURL=routerlib.js.map
+
 
 /***/ }
 /******/ ]);
