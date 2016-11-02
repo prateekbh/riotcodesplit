@@ -1,3 +1,4 @@
+import header from './tags/header.tag';
 import riot from 'riot';
 
 riot.route('/',function(){    
