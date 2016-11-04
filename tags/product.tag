@@ -17,6 +17,7 @@
 	<script>
 		this.productDesc=null;
 		this.on('mount',function(){
+			console.log(this.opts);
 			var plist = window.products[opts.cat];
 			for(var i=0; i<plist.length; i++){
 				if (plist[i].name === opts.name){

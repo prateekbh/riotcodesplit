@@ -11,16 +11,14 @@ module.exports = {
     vendor: './vendor.js'
   },
   output: {
-    path: path.join(__dirname, "public"),
-    filename: "[name].bundle.js",
-    chunkFilename: "[name]-[id].chunk.js"
+    filename: "./public/[name].bundle.js",
+    chunkFilename: "./public/[name].bundle.js"
   },
   plugins: [
     new CommonsChunkPlugin({
-      filename: "vendor.js",
+      minChunks: Infinity,
       name: "vendor"
-    }),
-    new VendorChunkPlugin('vendor'),
+    })
   ],
   module: {
     loaders: [

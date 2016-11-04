@@ -1,10 +1,10 @@
 <browse>
 	<ul class='productgrid'>
 		<li class="product" each={product in products}>
-			<a href='/#product/{category}/{product.name}'>
+			<nav href='/product/{category}/{product.name}'>
 				<img class="productpic" src='https://shop.polymer-project.org{product.image}' height="300" width="300" />
 				<div class="producttitle">{product.title}</div>
-			</a>
+			</nav>
 		</li>
 	</ul>
 	<script>

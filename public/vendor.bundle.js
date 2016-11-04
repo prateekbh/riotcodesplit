@@ -76,7 +76,7 @@
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
 
-/******/ 			script.src = __webpack_require__.p + "" + ({"0":"app","1":"browse","2":"home"}[chunkId]||chunkId) + "-" + chunkId + ".chunk.js";
+/******/ 			script.src = __webpack_require__.p + "./public/" + ({"0":"app","1":"home","2":"browse"}[chunkId]||chunkId) + ".bundle.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -89,10 +89,40 @@
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */,
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _riot = __webpack_require__(1);
+
+	var _riot2 = _interopRequireDefault(_riot);
+
+	var _header = __webpack_require__(6);
+
+	var _header2 = _interopRequireDefault(_header);
+
+	var _router = __webpack_require__(7);
+
+	var _router2 = _interopRequireDefault(_router);
+
+	var _route = __webpack_require__(8);
+
+	var _route2 = _interopRequireDefault(_route);
+
+	var _navigate = __webpack_require__(9);
+
+	var _navigate2 = _interopRequireDefault(_navigate);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2778,7 +2808,8 @@
 /***/ },
 /* 3 */,
 /* 4 */,
-/* 5 */
+/* 5 */,
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var riot = __webpack_require__(1);
@@ -2787,132 +2818,172 @@
 	});
 
 /***/ },
-/* 6 */
-/***/ function(module, exports) {
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	var riot = __webpack_require__(1);
 
-	riot.tag2('navigate', '<a href="{document.querySelector(\'router\').getBasePath()+opts.to}" onclick="{nagivateToRoute}"><yield></yield></a>', '', '', function (opts) {
-			var self = this;
-			this.nagivateToRoute = function (e) {
-					e.preventDefault();
-					riot.route(self.opts.to, self.opts.title || null, self.opts.replace ? true : false);
-			};
-	});
-	riot.tag2('route', '<yield></yield>', '', '', function (opts) {
-			var _this = this;
+	riot.tag2('router', '<div id="riotcontainer" class="route-container"> <yield></yield> </div> <div id="riotroot" class="riot-root"> </div>', '', '', function(opts) {
+					var self = this;
+					var $appRoot = null;
+					var currTag = null;
 
-			this.on('mount', function (e) {
-					if (Object.keys(_this.tags).length === 0) {
-							_this.parent && _this.parent.setRoute && _this.parent.setRoute(_this.opts.path, _this.opts.component);
-					}
-			});
+					var _isRouteRendedered = false;
+					var routeParams = {};
 
-			this.setRoute = function (path, component) {
-					this.parent && this.parent.setRoute && this.parent.setRoute(this.opts.path + path, component);
-			};
-	});
-	riot.tag2('router', '<div class="route-container"><yield></yield></div><div class="riot-root"></div>', '', '', function (opts) {
-			var _this2 = this;
-
-			var self = this;
-			var $appRoot = null;
-			var currTag = null;
-
-			var routeParams = {};
-
-			function unmountCurrRoute() {
-					if (currTag && currTag.unmount) {
-							currTag.unmount();
-					}
-			}
-
-			function createRouteWithTagName(tagName) {
-
-					var tag = '<' + tagName + ' class="route-' + tagName + '"></' + tagName + '>';
-
-					unmountCurrRoute();
-
-					$appRoot.innerHTML = tag;
-					var mountedTag;
-					try {
-							mountedTag = riot.mount(tagName + '.route-' + tagName, routeParams);
-					} catch (e) {
-
-							setTimeout(function () {
-									throw e;
-							}, 0);
-					}
-					if (!mountedTag || mountedTag.length === 0) {
-							self.trigger('tagNotFound', tagName);
-							if (self.opts['onTagnotfound'] && self.opts['onTagnotfound'] instanceof Function) {
-									self.opts['onTagnotfound'](tagName);
+					function unmountCurrRoute(){
+							if(currTag && currTag.unmount){
+										currTag.unmount();
 							}
-					} else {
-							self.trigger('routeChanged', tagName);
-							if (self.opts['onRoutechange'] && self.opts['onRoutechange'] instanceof Function) {
-									self.opts['onRoutechange'](tagName);
+					}
+
+					function createRouteWithTagName(tagName){
+
+							var tag = '<'+tagName+' class="route-'+tagName+'"></'+tagName+'>';
+
+							unmountCurrRoute();
+
+							$appRoot.innerHTML = tag;
+							var mountedTag;
+							try{
+								if(typeof window === 'undefined'){
+
+									$appRoot.innerHTML = riot.render(tagName,routeParams);
+								} else {
+									mountedTag = riot.mount(tagName + '.route-' + tagName, routeParams);
+								}
 							}
-							currTag = mountedTag[0];
+							catch(e){
+
+								setTimeout(function(){
+									throw(e);
+								},0);
+							}
+							if(!mountedTag || mountedTag.length === 0){
+									self.trigger('tagNotFound',tagName);
+									if(self.opts['onTagnotfound'] && self.opts['onTagnotfound'] instanceof Function){
+										self.opts['onTagnotfound'](tagName);
+									}
+
+							}
+							else{
+									self.trigger('routeChanged',tagName);
+									if(self.opts['onRoutechange'] && self.opts['onRoutechange'] instanceof Function){
+										self.opts['onRoutechange'](tagName);
+									}
+									currTag = mountedTag[0];
+							}
 					}
-			}
 
-			function changeRoute(newRoute) {
-					if (typeof newRoute === 'string') {
-							createRouteWithTagName(newRoute);
-					} else if (window.Promise && newRoute instanceof window.Promise) {
-							newRoute.then(function (tagName) {
-									createRouteWithTagName(tagName);
-							});
+					function changeRoute(newRoute){
+							if(typeof(newRoute) === 'string'){
+									createRouteWithTagName(newRoute);
+							} else if (newRoute instanceof Function){
+									var result = newRoute();
+									if(typeof(result) === 'string'){
+										createRouteWithTagName(newRoute);
+									} else if(result instanceof Promise){
+										result.then(tagName  => {
+											createRouteWithTagName(tagName);
+										});
+									}
+							}
 					}
-			}
 
-			this.setRoute = function (path, component) {
-					(function (path, component) {
+					this.setRoute = function(path, component){
+							(function(path, component){
 
-							var tokenRegExp = /:([a-z]*)/ig;
+									var tokenRegExp = /:([a-z]*)/ig;
 
-							var params = path.match(tokenRegExp);
-							params = params && params.map(function (param) {
-									return param.length > 0 ? param.substring(1) : '';
-							}) || params;
+									var params = path.match(tokenRegExp);
+									params = params && params.map(param => param.length>0 ? param.substring(1): '') || params;
 
-							path = path.replace(tokenRegExp, '*');
+									path = path.replace(tokenRegExp,'*');
 
-							riot.route(path, function () {
-									var _arguments = arguments;
+									if(typeof window === 'undefined' && !_isRouteRendedered){
+										var serverSidePath = new RegExp(path.replace(/\*/g,'([^/?#]+?)').replace(/\.\./g,'.*')+'$');
+										var loc = self.opts.location || self.parent&&self.parent.opts.location;
 
+										if(serverSidePath.test(loc)){
+											var matches=loc.match(serverSidePath)
+											matches.length&&matches.shift();
 
-									routeParams = {};
+											routeParams = {};
+											params && params.forEach(function (param, index) {
+													routeParams[param] = matches[index];
+											});
 
-									params && params.forEach(function (param, index) {
-											routeParams[param] = _arguments[index];
-									});
+											_isRouteRendedered = true;
+											changeRoute(component);
+										}
 
-									changeRoute(component);
-							});
+									} else if(typeof window !== 'undefined') {
 
-							riot.route.start(true);
-					})(path, component);
-			};
+										riot.route(path,function() {
 
-			this.on('mount', function (e) {
+												routeParams={};
 
-					if (!_this2.opts.showRoutes) {
-							var routeContainer = _this2.root.querySelector('.route-container');
-							routeContainer.remove && routeContainer.remove();
+												params && params.forEach((param,index) => {
+													routeParams[param] = arguments[index];
+												});
+
+												changeRoute(component);
+										});
+
+										riot.route.start(true);
+									}
+							})(path, component)
 					}
-					$appRoot = _this2.root.querySelector('.riot-root');
 
-					_this2.opts.baseRoute && riot.route.base(_this2.opts.baseRoute);
+					this.on('mount',(e)=>{
 
-					_this2.root.getBasePath = function () {
-							return self.opts.baseRoute || '#';
-					};
-			});
+							if(!this.opts.showRoutes){
+								var routeContainer = this.riotcontainer;
+								routeContainer.remove && routeContainer.remove();
+							}
+
+							$appRoot = this.riotroot;
+
+							this.opts.baseRoute && riot.route.base(this.opts.baseRoute);
+
+							this.root.getBasePath = function(){
+								return self.opts.baseRoute||'#';
+							}
+					});
 	});
-	//# sourceMappingURL=routerlib.js.map
 
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var riot = __webpack_require__(1);
+
+	riot.tag2('route', '<yield></yield>', '', '', function(opts) {
+					this.on('mount',(e) => {
+							if(Object.keys(this.tags).length===0){
+								this.parent && this.parent.setRoute && this.parent.setRoute(this.opts.path, this.opts.component );
+							}
+					});
+
+					this.setRoute = function(path, component){
+						this.parent && this.parent.setRoute && this.parent.setRoute(this.opts.path + path, component );
+					}
+	});
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var riot = __webpack_require__(1);
+
+	riot.tag2('navigate', '<a href="{document.querySelector(\'router\').getBasePath()+opts.to}" onclick="{nagivateToRoute}"> <yield></yield> </a>', '', '', function(opts) {
+	        var self = this;
+	        this.nagivateToRoute = function(e){
+	            e.preventDefault();
+	            riot.route(self.opts.to,self.opts.title||null,self.opts.replace?true:false);
+	        }
+	});
 
 /***/ }
 /******/ ]);
