@@ -1,5 +1,7 @@
 import riot from 'riot';
+import header from './tags/header.tag';
 import appRoutes from './tags/routes.tag';
+
 riot.mount('header');
 riot.mount('app-router');
 

@@ -1,0 +1,1 @@
+import product from './tags/product.tag';

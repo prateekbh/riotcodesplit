@@ -1,12 +1,13 @@
 var webpack = require('webpack');
 var path = require("path");
-var CommonsChunkPlugin = require("./node_modules/webpack/lib/optimize/CommonsChunkPlugin");
+var CommonsPlugin = new require("webpack/lib/optimize/CommonsChunkPlugin");
 var VendorChunkPlugin = require('webpack-vendor-chunk-plugin');
 
 module.exports = {
   entry: {
     home: './home.js',
     browse: './browse.js',
+    product: './product.js',
     app:'./app.js',
     vendor: './vendor.js'
   },
@@ -15,9 +16,12 @@ module.exports = {
     chunkFilename: "./public/[name].bundle.js"
   },
   plugins: [
-    new CommonsChunkPlugin({
+    new CommonsPlugin({
       minChunks: Infinity,
       name: "vendor"
+    }),
+    new webpack.ProvidePlugin({
+        riot: "riot"
     })
   ],
   module: {
@@ -25,7 +29,7 @@ module.exports = {
       {
       test: /\.js$/,
       exclude: /node_modules/,
-      loader: 'babel-loader',
+      loader: 'babel',
       query: { presets: ['es2015'] }
     },{
       test: /\.tag$/,

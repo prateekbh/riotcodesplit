@@ -1,4 +1,4 @@
-webpackJsonp([2],{
+webpackJsonp([1],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
@@ -18,7 +18,7 @@ webpackJsonp([2],{
 
 	var riot = __webpack_require__(1);
 
-	riot.tag2('browse', '<ul class="productgrid"> <li class="product" each="{product in products}"> <nav href="/product/{category}/{product.name}"> <img class="productpic" riot-src="https://shop.polymer-project.org{product.image}" height="300" width="300"> <div class="producttitle">{product.title}</div> </nav> </li> </ul>', '', '', function(opts) {
+	riot.tag2('browse', '<ul class="productgrid"> <li class="product" each="{product in products}"> <navigate to="/product/{category}/{product.name}"> <img class="productpic" riot-src="https://shop.polymer-project.org{product.image}" height="300" width="300"> <div class="producttitle">{product.title}</div> </navigate> </li> </ul>', '', '', function(opts) {
 			this.products=[];
 			this.category='';
 

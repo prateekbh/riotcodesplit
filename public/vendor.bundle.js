@@ -30,7 +30,7 @@
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		3:0
+/******/ 		4:0
 /******/ 	};
 
 /******/ 	// The require function
@@ -76,7 +76,7 @@
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
 
-/******/ 			script.src = __webpack_require__.p + "./public/" + ({"0":"app","1":"home","2":"browse"}[chunkId]||chunkId) + ".bundle.js";
+/******/ 			script.src = __webpack_require__.p + "./public/" + ({"0":"app","1":"browse","2":"home","3":"product"}[chunkId]||chunkId) + ".bundle.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -104,21 +104,11 @@
 
 	var _riot2 = _interopRequireDefault(_riot);
 
-	var _header = __webpack_require__(6);
+	var _routerlib = __webpack_require__(8);
 
-	var _header2 = _interopRequireDefault(_header);
+	var routerTags = _interopRequireWildcard(_routerlib);
 
-	var _router = __webpack_require__(7);
-
-	var _router2 = _interopRequireDefault(_router);
-
-	var _route = __webpack_require__(8);
-
-	var _route2 = _interopRequireDefault(_route);
-
-	var _navigate = __webpack_require__(9);
-
-	var _navigate2 = _interopRequireDefault(_navigate);
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2809,181 +2799,166 @@
 /* 3 */,
 /* 4 */,
 /* 5 */,
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var riot = __webpack_require__(1);
-
-	riot.tag2('header', '<div class="nav"> <svg fill="#000000" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"> <path d="M0 0h24v24H0z" fill="none"></path> <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path> </svg> </div> <div class="name"> <h1><a href="#">Riot Shop</a></h1> </div>', '', '', function(opts) {
-	});
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var riot = __webpack_require__(1);
-
-	riot.tag2('router', '<div id="riotcontainer" class="route-container"> <yield></yield> </div> <div id="riotroot" class="riot-root"> </div>', '', '', function(opts) {
-					var self = this;
-					var $appRoot = null;
-					var currTag = null;
-
-					var _isRouteRendedered = false;
-					var routeParams = {};
-
-					function unmountCurrRoute(){
-							if(currTag && currTag.unmount){
-										currTag.unmount();
-							}
-					}
-
-					function createRouteWithTagName(tagName){
-
-							var tag = '<'+tagName+' class="route-'+tagName+'"></'+tagName+'>';
-
-							unmountCurrRoute();
-
-							$appRoot.innerHTML = tag;
-							var mountedTag;
-							try{
-								if(typeof window === 'undefined'){
-
-									$appRoot.innerHTML = riot.render(tagName,routeParams);
-								} else {
-									mountedTag = riot.mount(tagName + '.route-' + tagName, routeParams);
-								}
-							}
-							catch(e){
-
-								setTimeout(function(){
-									throw(e);
-								},0);
-							}
-							if(!mountedTag || mountedTag.length === 0){
-									self.trigger('tagNotFound',tagName);
-									if(self.opts['onTagnotfound'] && self.opts['onTagnotfound'] instanceof Function){
-										self.opts['onTagnotfound'](tagName);
-									}
-
-							}
-							else{
-									self.trigger('routeChanged',tagName);
-									if(self.opts['onRoutechange'] && self.opts['onRoutechange'] instanceof Function){
-										self.opts['onRoutechange'](tagName);
-									}
-									currTag = mountedTag[0];
-							}
-					}
-
-					function changeRoute(newRoute){
-							if(typeof(newRoute) === 'string'){
-									createRouteWithTagName(newRoute);
-							} else if (newRoute instanceof Function){
-									var result = newRoute();
-									if(typeof(result) === 'string'){
-										createRouteWithTagName(newRoute);
-									} else if(result instanceof Promise){
-										result.then(tagName  => {
-											createRouteWithTagName(tagName);
-										});
-									}
-							}
-					}
-
-					this.setRoute = function(path, component){
-							(function(path, component){
-
-									var tokenRegExp = /:([a-z]*)/ig;
-
-									var params = path.match(tokenRegExp);
-									params = params && params.map(param => param.length>0 ? param.substring(1): '') || params;
-
-									path = path.replace(tokenRegExp,'*');
-
-									if(typeof window === 'undefined' && !_isRouteRendedered){
-										var serverSidePath = new RegExp(path.replace(/\*/g,'([^/?#]+?)').replace(/\.\./g,'.*')+'$');
-										var loc = self.opts.location || self.parent&&self.parent.opts.location;
-
-										if(serverSidePath.test(loc)){
-											var matches=loc.match(serverSidePath)
-											matches.length&&matches.shift();
-
-											routeParams = {};
-											params && params.forEach(function (param, index) {
-													routeParams[param] = matches[index];
-											});
-
-											_isRouteRendedered = true;
-											changeRoute(component);
-										}
-
-									} else if(typeof window !== 'undefined') {
-
-										riot.route(path,function() {
-
-												routeParams={};
-
-												params && params.forEach((param,index) => {
-													routeParams[param] = arguments[index];
-												});
-
-												changeRoute(component);
-										});
-
-										riot.route.start(true);
-									}
-							})(path, component)
-					}
-
-					this.on('mount',(e)=>{
-
-							if(!this.opts.showRoutes){
-								var routeContainer = this.riotcontainer;
-								routeContainer.remove && routeContainer.remove();
-							}
-
-							$appRoot = this.riotroot;
-
-							this.opts.baseRoute && riot.route.base(this.opts.baseRoute);
-
-							this.root.getBasePath = function(){
-								return self.opts.baseRoute||'#';
-							}
-					});
-	});
-
-
-/***/ },
+/* 6 */,
+/* 7 */,
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var riot = __webpack_require__(1);
+	/* WEBPACK VAR INJECTION */(function(riot) {'use strict';
 
-	riot.tag2('route', '<yield></yield>', '', '', function(opts) {
-					this.on('mount',(e) => {
-							if(Object.keys(this.tags).length===0){
-								this.parent && this.parent.setRoute && this.parent.setRoute(this.opts.path, this.opts.component );
-							}
+	riot.tag2('navigate', '<a href="{document.querySelector(\'router\').getBasePath()+opts.to}" onclick="{nagivateToRoute}"><yield></yield></a>', '', '', function (opts) {
+		var self = this;
+		this.nagivateToRoute = function (e) {
+			e.preventDefault();
+			riot.route(self.opts.to, self.opts.title || null, self.opts.replace ? true : false);
+		};
+	});
+	riot.tag2('route', '<yield></yield>', '', '', function (opts) {
+		var _this = this;
+
+		this.on('mount', function (e) {
+			if (Object.keys(_this.tags).length === 0) {
+				_this.parent && _this.parent.setRoute && _this.parent.setRoute(_this.opts.path, _this.opts.component);
+			}
+		});
+
+		this.setRoute = function (path, component) {
+			this.parent && this.parent.setRoute && this.parent.setRoute(this.opts.path + path, component);
+		};
+	});
+	riot.tag2('router', '<div id="riotcontainer" class="route-container"><yield></yield></div><div id="riotroot" class="riot-root"></div>', '', '', function (opts) {
+		var _this2 = this;
+
+		var self = this;
+		var $appRoot = null;
+		var currTag = null;
+
+		var _isRouteRendedered = false;
+		var routeParams = {};
+
+		function unmountCurrRoute() {
+			if (currTag && currTag.unmount) {
+				currTag.unmount();
+			}
+		}
+
+		function createRouteWithTagName(tagName) {
+
+			var tag = '<' + tagName + ' class="route-' + tagName + '"></' + tagName + '>';
+
+			unmountCurrRoute();
+
+			$appRoot.innerHTML = tag;
+			var mountedTag;
+			try {
+				if (typeof window === 'undefined') {
+
+					$appRoot.innerHTML = riot.render(tagName, routeParams);
+				} else {
+					mountedTag = riot.mount(tagName + '.route-' + tagName, routeParams);
+				}
+			} catch (e) {
+
+				setTimeout(function () {
+					throw e;
+				}, 0);
+			}
+			if (!mountedTag || mountedTag.length === 0) {
+				self.trigger('tagNotFound', tagName);
+				if (self.opts['onTagnotfound'] && self.opts['onTagnotfound'] instanceof Function) {
+					self.opts['onTagnotfound'](tagName);
+				}
+			} else {
+				self.trigger('routeChanged', tagName);
+				if (self.opts['onRoutechange'] && self.opts['onRoutechange'] instanceof Function) {
+					self.opts['onRoutechange'](tagName);
+				}
+				currTag = mountedTag[0];
+			}
+		}
+
+		function changeRoute(newRoute) {
+			if (typeof newRoute === 'string') {
+				createRouteWithTagName(newRoute);
+			} else if (newRoute instanceof Function) {
+				var result = newRoute();
+				if (typeof result === 'string') {
+					createRouteWithTagName(newRoute);
+				} else if (result instanceof Promise) {
+					result.then(function (tagName) {
+						createRouteWithTagName(tagName);
+					});
+				}
+			}
+		}
+
+		this.setRoute = function (path, component) {
+			(function (path, component) {
+
+				var tokenRegExp = /:([a-z]*)/ig;
+
+				var params = path.match(tokenRegExp);
+				params = params && params.map(function (param) {
+					return param.length > 0 ? param.substring(1) : '';
+				}) || params;
+
+				path = path.replace(tokenRegExp, '*');
+
+				if (typeof window === 'undefined' && !_isRouteRendedered) {
+					var serverSidePath = new RegExp(path.replace(/\*/g, '([^/?#]+?)').replace(/\.\./g, '.*') + '$');
+					var loc = self.opts.location || self.parent && self.parent.opts.location;
+
+					if (serverSidePath.test(loc)) {
+						var matches = loc.match(serverSidePath);
+						matches.length && matches.shift();
+
+						routeParams = {};
+						params && params.forEach(function (param, index) {
+							routeParams[param] = matches[index];
+						});
+
+						_isRouteRendedered = true;
+						changeRoute(component);
+					}
+				} else if (typeof window !== 'undefined') {
+
+					riot.route(path, function () {
+						var _arguments = arguments;
+
+
+						routeParams = {};
+
+						params && params.forEach(function (param, index) {
+							routeParams[param] = _arguments[index];
+						});
+
+						changeRoute(component);
 					});
 
-					this.setRoute = function(path, component){
-						this.parent && this.parent.setRoute && this.parent.setRoute(this.opts.path + path, component );
-					}
+					riot.route.start(true);
+				}
+			})(path, component);
+		};
+
+		this.on('mount', function (e) {
+
+			if (!_this2.opts.showRoutes) {
+				var routeContainer = _this2.riotcontainer;
+				routeContainer.remove && routeContainer.remove();
+			}
+
+			$appRoot = _this2.riotroot;
+
+			_this2.opts.baseRoute && riot.route.base(_this2.opts.baseRoute);
+
+			_this2.root.getBasePath = function () {
+				return self.opts.baseRoute || '#';
+			};
+		});
 	});
+	//# sourceMappingURL=routerlib.js.map
 
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var riot = __webpack_require__(1);
-
-	riot.tag2('navigate', '<a href="{document.querySelector(\'router\').getBasePath()+opts.to}" onclick="{nagivateToRoute}"> <yield></yield> </a>', '', '', function(opts) {
-	        var self = this;
-	        this.nagivateToRoute = function(e){
-	            e.preventDefault();
-	            riot.route(self.opts.to,self.opts.title||null,self.opts.replace?true:false);
-	        }
-	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }
 /******/ ]);
