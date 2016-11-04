@@ -21,10 +21,9 @@ webpackJsonp([3],{
 	riot.tag2('product', '<div class="productinfo" if="{productDesc}"> <div class="productpic"> <img class="pic" riot-src="https://shop.polymer-project.org{productDesc.image}"></img> </div> <div class="info"> <div class="name"> <span class="label">Name: </span> <span class="desc">{productDesc.title}</span> </div> <div class="price"> <span class="label">Price: </span> <span class="desc">{productDesc.price}</span> </div> </div> </div>', '', '', function(opts) {
 			this.productDesc=null;
 			this.on('mount',function(){
-				console.log(this.opts);
-				var plist = window.products[opts.cat];
+				var plist = window.products[opts.category];
 				for(var i=0; i<plist.length; i++){
-					if (plist[i].name === opts.name){
+					if (plist[i].name === opts.productName){
 						this.update({
 							productDesc: plist[i]
 						});

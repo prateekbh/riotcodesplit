@@ -9,7 +9,8 @@
 		this.loadHome = function(){
 			return new Promise((resolve,reject) => {
 				require.ensure("./home.tag",function(require){
-					require("./home.tag");
+					var tagName = require("./home.tag");
+					console.log(tagName);
 					resolve("home");
 				},"home");
 			})

@@ -52,16 +52,17 @@ webpackJsonp([0],[
 	riot.tag2('app-router', '<router> <route path="/" component="{this.parent.loadHome}"></route> <route path="/browse/:category" component="{this.parent.loadBrowse}"></route> <route path="/product/:category/:productName" component="{this.parent.loadProduct}"></route> </router>', '', '', function(opts) {
 			this.loadHome = function(){
 				return new Promise((resolve,reject) => {
-					__webpack_require__.e/* nsure */(2, function(require){
-						__webpack_require__(6);
+					__webpack_require__.e/* nsure */(1, function(require){
+						var tagName = __webpack_require__(5);
+						console.log(tagName);
 						resolve("home");
 					});
 				})
 			}
 			this.loadBrowse = function(){
 				return new Promise((resolve,reject) => {
-					__webpack_require__.e/* nsure */(1, function(require){
-						__webpack_require__(5);
+					__webpack_require__.e/* nsure */(2, function(require){
+						__webpack_require__(6);
 						resolve("browse");
 					});
 				})
