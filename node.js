@@ -4,6 +4,17 @@ var http = require('http');
 var debug = require('debug')('frontend:server');
 var app = express();
 var mustacheExpress = require('mustache-express');
+var appBody = require("./app.js");
+
+let proto = Object.getPrototypeOf(require);
+!proto.hasOwnProperty("ensure") && Object.defineProperties(proto, {
+    "ensure": {
+        value: function ensure(modules, callback) {
+            callback(this);
+        },
+        writable: false
+    }
+});
 
 // Register '.mustache' extension with The Mustache Express
 app.engine('mustache', mustacheExpress());
@@ -27,8 +38,11 @@ app.use(function(req, res, next) {
     currRouteJs = "404";  //not implented in this example
   }
 
-  res.render('index',{
-    currentRoute: "/public/"+currRouteJs+".bundle.js"
+  appBody(req.url,function(appMarkup){
+    res.render('index',{
+      currentRoute: "/public/"+currRouteJs+".bundle.js",
+      appMarkup: appMarkup 
+    });
   });
 });
 

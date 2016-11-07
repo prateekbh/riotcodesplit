@@ -1,9 +1,19 @@
-import riot from 'riot';
-import header from './tags/header.tag';
-import appRoutes from './tags/routes.tag';
+var riot = require('riot');
+var header = require('./tags/header.tag');
+var appRoutes =  require('./tags/routes.tag');
 
-riot.mount('header');
-riot.mount('app-router');
+if(riot.render && module.exports){
+	var render = require("riot-ssr");
+	module.exports = function(_location,cb){
+		render('app-router',{location: _location},function(rendered){
+			cb(riot.render('header',{}) + rendered);
+		});
+	}
+}else{
+	riot.mount('header');
+	riot.mount('app-router');
+}
+
 
 // riot.route('/',function(){    
 //     riot.mount('home');

@@ -5,7 +5,7 @@ webpackJsonp([3],{
 
 	'use strict';
 
-	var _product = __webpack_require__(7);
+	var _product = __webpack_require__(10);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -13,7 +13,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 7:
+/***/ 10:
 /***/ function(module, exports, __webpack_require__) {
 
 	var riot = __webpack_require__(1);

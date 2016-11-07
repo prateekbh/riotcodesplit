@@ -12,9 +12,13 @@
 		this.category='';
 		
 		this.on('mount',function(){
+			var productList =[];
+			if(typeof window !== 'undefined'){
+				productList = window.products[opts.category];
+			}
 			this.update({
 				category: opts.category,
-				products: window.products[opts.category]
+				products: productList
 			});
 		});
 	</script>

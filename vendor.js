@@ -1,2 +1,4 @@
 import riot from 'riot';
-import * as routerTags from 'riot-tagrouter/build/routerlib.js'; 
+require('riot-tagrouter/tags/router.tag');
+require('riot-tagrouter/tags/route.tag');
+require('riot-tagrouter/tags/navigate.tag');

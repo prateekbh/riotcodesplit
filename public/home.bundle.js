@@ -5,7 +5,7 @@ webpackJsonp([1],{
 
 	'use strict';
 
-	var _home = __webpack_require__(5);
+	var _home = __webpack_require__(8);
 
 	var _home2 = _interopRequireDefault(_home);
 
@@ -13,7 +13,7 @@ webpackJsonp([1],{
 
 /***/ },
 
-/***/ 5:
+/***/ 8:
 /***/ function(module, exports, __webpack_require__) {
 
 	var riot = __webpack_require__(1);

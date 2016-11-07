@@ -1,11 +1,16 @@
+require('riot-tagrouter/tags/router.tag');
+require('riot-tagrouter/tags/route.tag');
+require('riot-tagrouter/tags/navigate.tag');
+
 <app-router>
-	<router>
+	<router base-route="/">
 			<route path='/' component={this.parent.loadHome}></route>
 			<route path='/browse/:category' component={this.parent.loadBrowse}></route>
 			<route path='/product/:category/:productName' component={this.parent.loadProduct}></route>
 			<!--<router path='/..' component={tag-404}/>-->
 	</router>
 	<script>
+		var self = this;
 		this.loadHome = function(){
 			return new Promise((resolve,reject) => {
 				require.ensure("./home.tag",function(require){

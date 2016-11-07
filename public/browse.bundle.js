@@ -5,7 +5,7 @@ webpackJsonp([2],{
 
 	'use strict';
 
-	var _browse = __webpack_require__(6);
+	var _browse = __webpack_require__(9);
 
 	var _browse2 = _interopRequireDefault(_browse);
 
@@ -13,7 +13,7 @@ webpackJsonp([2],{
 
 /***/ },
 
-/***/ 6:
+/***/ 9:
 /***/ function(module, exports, __webpack_require__) {
 
 	var riot = __webpack_require__(1);
@@ -23,9 +23,13 @@ webpackJsonp([2],{
 			this.category='';
 
 			this.on('mount',function(){
+				var productList =[];
+				if(typeof window !== 'undefined'){
+					productList = window.products[opts.category];
+				}
 				this.update({
 					category: opts.category,
-					products: window.products[opts.category]
+					products: productList
 				});
 			});
 	});
