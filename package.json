@@ -19,11 +19,11 @@
     "riot-ssr": "^1.1.6",
     "tag-loader": "^0.3.0",
     "webpack": "^1.13.2",
-    "webpack-vendor-chunk-plugin": "^1.0.0"
+    "webpack-vendor-chunk-plugin": "^1.0.0",
+    "riot-tagrouter": "^1.1.2"
   },
   "devDependencies": {
-    "babel-preset-es2015": "^6.14.0",
-    "riot-tagrouter": "^1.1.2"
+    "babel-preset-es2015": "^6.14.0"
   },
   "engines": {
     "node": "6.0.0"
