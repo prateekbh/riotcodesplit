@@ -30,9 +30,14 @@ app.get("/css/*",(req,res)=>{
 })
 
 app.use(function(req, res, next) {
+
   var currRouteJs = "";
   if(req.url === "/"){
     currRouteJs = "home";
+  } else if(req.url.startsWith("/browse")){
+    currRouteJs = "browse";
+  } else if(req.url.startsWith("/product")){
+    currRouteJs = "product";
   } else {
     currRouteJs = "404";  //not implented in this example
   }
