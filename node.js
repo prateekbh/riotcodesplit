@@ -50,11 +50,13 @@ app.use(function(req, res, next) {
   });
 });
 
-app.set('port', 8080);
+var port = normalizePort(process.env.PORT || '8080');
 
-app.listen(8080, '0.0.0.0', function onStart(err) {
+app.set('port', port);
+
+app.listen(port, '0.0.0.0', function onStart(err) {
   if (err) {
     console.log(err);
   }
-  console.info('==> 🌎 Listening on port %s. Open up http://0.0.0.0:%s/ in your browser.', 8080, 8080);
+  console.info('==> 🌎 Listening on port %s. Open up http://0.0.0.0:%s/ in your browser.', port, port);
 });
