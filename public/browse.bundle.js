@@ -26,6 +26,8 @@ webpackJsonp([2],{
 				var productList =[];
 				if(typeof window !== 'undefined'){
 					productList = window.products[opts.category];
+				}else{
+					productList = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../data.json\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 				}
 				this.update({
 					category: opts.category,

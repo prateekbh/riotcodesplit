@@ -13,7 +13,8 @@ module.exports = {
   },
   output: {
     filename: "./public/[name].bundle.js",
-    chunkFilename: "./public/[name].bundle.js"
+    chunkFilename: "./public/[name].bundle.js",
+    publicPath: '/'
   },
   plugins: [
     new CommonsPlugin({

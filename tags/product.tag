@@ -1,7 +1,7 @@
 <product>
 	<div class="productinfo" if={productDesc}>
 		<div class="productpic">
-			<img class="pic" src='https://shop.polymer-project.org{productDesc.image}'></img>
+			<img class="pic" src='https://shop.polymer-project.org{productDesc.image}'/>
 		</div>
 		<div class="info">
 			<div class="name">
@@ -17,11 +17,16 @@
 	<script>
 		this.productDesc=null;
 		this.on('mount',function(){
-			var plist = window.products[opts.category];
-			for(var i=0; i<plist.length; i++){
-				if (plist[i].name === opts.productName){
+			var productList = [];
+			if(typeof window !== 'undefined'){
+				productList = window.products[opts.category];
+			}else{
+				productList = require('../data.json');
+			}
+			for(var i=0; i<productList.length; i++){
+				if (productList[i].name === opts.productName){
 					this.update({
-						productDesc: plist[i]
+						productDesc: productList[i]
 					});
 					break;
 				}

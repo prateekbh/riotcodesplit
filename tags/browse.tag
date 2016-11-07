@@ -15,6 +15,8 @@
 			var productList =[];
 			if(typeof window !== 'undefined'){
 				productList = window.products[opts.category];
+			}else{
+				productList = require('../data.json');
 			}
 			this.update({
 				category: opts.category,

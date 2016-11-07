@@ -5,7 +5,6 @@ var debug = require('debug')('frontend:server');
 var app = express();
 var mustacheExpress = require('mustache-express');
 var appBody = require("./app.js");
-
 let proto = Object.getPrototypeOf(require);
 !proto.hasOwnProperty("ensure") && Object.defineProperties(proto, {
     "ensure": {

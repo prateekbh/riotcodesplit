@@ -5,7 +5,7 @@ webpackJsonp([3],{
 
 	'use strict';
 
-	var _product = __webpack_require__(10);
+	var _product = __webpack_require__(11);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -13,19 +13,24 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 10:
+/***/ 11:
 /***/ function(module, exports, __webpack_require__) {
 
 	var riot = __webpack_require__(1);
 
-	module.exports=riot.tag2('product', '<div class="productinfo" if="{productDesc}"> <div class="productpic"> <img class="pic" riot-src="https://shop.polymer-project.org{productDesc.image}"></img> </div> <div class="info"> <div class="name"> <span class="label">Name: </span> <span class="desc">{productDesc.title}</span> </div> <div class="price"> <span class="label">Price: </span> <span class="desc">{productDesc.price}</span> </div> </div> </div>', '', '', function(opts) {
+	module.exports=riot.tag2('product', '<div class="productinfo" if="{productDesc}"> <div class="productpic"> <img class="pic" riot-src="https://shop.polymer-project.org{productDesc.image}"> </div> <div class="info"> <div class="name"> <span class="label">Name: </span> <span class="desc">{productDesc.title}</span> </div> <div class="price"> <span class="label">Price: </span> <span class="desc">{productDesc.price}</span> </div> </div> </div>', '', '', function(opts) {
 			this.productDesc=null;
 			this.on('mount',function(){
-				var plist = window.products[opts.category];
-				for(var i=0; i<plist.length; i++){
-					if (plist[i].name === opts.productName){
+				var productList = [];
+				if(typeof window !== 'undefined'){
+					productList = window.products[opts.category];
+				}else{
+					productList = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../data.json\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+				}
+				for(var i=0; i<productList.length; i++){
+					if (productList[i].name === opts.productName){
 						this.update({
-							productDesc: plist[i]
+							productDesc: productList[i]
 						});
 						break;
 					}
