@@ -114,11 +114,11 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* Riot v2.6.2, @license MIT */
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* Riot v2.6.7, @license MIT */
 
 	;(function(window, undefined) {
 	  'use strict';
-	var riot = { version: 'v2.6.2', settings: {} },
+	var riot = { version: 'v2.6.7', settings: {} },
 	  // be aware, internal usage
 	  // ATTENTION: prefix the global dynamic variables with `__`
 
@@ -649,7 +649,7 @@
 
 	/**
 	 * The riot template engine
-	 * @version v2.4.1
+	 * @version v2.4.2
 	 */
 	/**
 	 * riot.util.brackets
@@ -906,7 +906,7 @@
 	  }
 
 	  var
-	    CH_IDEXPR = '\u2057',
+	    CH_IDEXPR = String.fromCharCode(0x2057),
 	    RE_CSNAME = /^(?:(-?[_A-Za-z\xA0-\xFF][-\w\xA0-\xFF]*)|\u2057(\d+)~):/,
 	    RE_QBLOCK = RegExp(brackets.S_QBLOCKS, 'g'),
 	    RE_DQUOTE = /\u2057/g,
@@ -1022,7 +1022,7 @@
 	  // istanbul ignore next: not both
 	  var // eslint-disable-next-line max-len
 	    JS_CONTEXT = '"in this?this:' + (typeof window !== 'object' ? 'global' : 'window') + ').',
-	    JS_VARNAME = /[,{][$\w]+(?=:)|(^ *|[^$\w\.])(?!(?:typeof|true|false|null|undefined|in|instanceof|is(?:Finite|NaN)|void|NaN|new|Date|RegExp|Math)(?![$\w]))([$_A-Za-z][$\w]*)/g,
+	    JS_VARNAME = /[,{][\$\w]+(?=:)|(^ *|[^$\w\.{])(?!(?:typeof|true|false|null|undefined|in|instanceof|is(?:Finite|NaN)|void|NaN|new|Date|RegExp|Math)(?![$\w]))([$_A-Za-z][$\w]*)/g,
 	    JS_NOPROPS = /^(?=(\.[$\w]+))\1(?:[^.[(]|$)/
 
 	  function _wrapExpr (expr, asText, key) {
@@ -1062,7 +1062,7 @@
 	    return expr
 	  }
 
-	  _tmpl.version = brackets.version = 'v2.4.1'
+	  _tmpl.version = brackets.version = 'v2.4.2'
 
 	  return _tmpl
 
@@ -1090,16 +1090,17 @@
 	   * Creates a DOM element to wrap the given content. Normally an `DIV`, but can be
 	   * also a `TABLE`, `SELECT`, `TBODY`, `TR`, or `COLGROUP` element.
 	   *
-	   * @param   {string} templ  - The template coming from the custom tag definition
-	   * @param   {string} [html] - HTML content that comes from the DOM element where you
+	   * @param   { String } templ  - The template coming from the custom tag definition
+	   * @param   { String } [html] - HTML content that comes from the DOM element where you
 	   *           will mount the tag, mostly the original tag in the page
+	   * @param   { Boolean } checkSvg - flag needed to know if we need to force the svg rendering in case of loop nodes
 	   * @returns {HTMLElement} DOM element with _templ_ merged through `YIELD` with the _html_.
 	   */
-	  function _mkdom(templ, html) {
+	  function _mkdom(templ, html, checkSvg) {
 	    var
 	      match   = templ && templ.match(/^\s*<([-\w]+)/),
 	      tagName = match && match[1].toLowerCase(),
-	      el = mkEl('div', isSVGTag(tagName))
+	      el = mkEl('div', checkSvg && isSVGTag(tagName))
 
 	    // replace all the yield tags with the tag inner html
 	    templ = replaceYield(templ, html)
@@ -1261,6 +1262,22 @@
 	  }
 	}
 
+	/**
+	 * Insert a new tag avoiding the insert for the conditional tags
+	 * @param   {Boolean} isVirtual [description]
+	 * @param   { Tag }  prevTag - tag instance used as reference to prepend our new tag
+	 * @param   { Tag }  newTag - new tag to be inserted
+	 * @param   { HTMLElement }  root - loop parent node
+	 * @param   { Array }  tags - array containing the current tags list
+	 * @param   { Function }  virtualFn - callback needed to move or insert virtual DOM
+	 * @param   { Object } dom - DOM node we need to loop
+	 */
+	function insertTag(isVirtual, prevTag, newTag, root, tags, virtualFn, dom) {
+	  if (isInStub(prevTag.root)) return
+	  if (isVirtual) virtualFn(prevTag, root, newTag, dom.childNodes.length)
+	  else root.insertBefore(prevTag.root, newTag.root) // #1374 some browsers reset selected here
+	}
+
 
 	/**
 	 * Manage tags having the 'each'
@@ -1356,9 +1373,7 @@
 	        }
 	        // this tag must be insert
 	        else {
-	          if (isVirtual)
-	            addVirtual(tag, root, tags[i])
-	          else root.insertBefore(tag.root, tags[i].root) // #1374 some browsers reset selected here
+	          insertTag(isVirtual, tag, tags[i], root, tags, addVirtual, dom)
 	          oldItems.splice(i, 0, item)
 	        }
 
@@ -1371,10 +1386,11 @@
 	        pos !== i && _mustReorder &&
 	        tags[i] // fix 1581 unable to reproduce it in a test!
 	      ) {
-	        // update the DOM
-	        if (isVirtual)
-	          moveVirtual(tag, root, tags[i], dom.childNodes.length)
-	        else if (tags[i].root.parentNode) root.insertBefore(tag.root, tags[i].root)
+	        // #closes 2040 PLEASE DON'T REMOVE IT!
+	        // there are no tests for this feature
+	        if (contains(items, oldItems[i]))
+	          insertTag(isVirtual, tag, tags[i], root, tags, moveVirtual, dom)
+
 	        // update the position attribute if it exists
 	        if (expr.pos)
 	          tag[expr.pos] = i
@@ -1594,7 +1610,7 @@
 	    if (tmpl.hasExpr(val)) attr[el.name] = val
 	  })
 
-	  dom = mkdom(impl.tmpl, innerHTML)
+	  dom = mkdom(impl.tmpl, innerHTML, isLoop)
 
 	  // options
 	  function updateOpts() {
@@ -2801,7 +2817,7 @@
 
 	var riot = __webpack_require__(1);
 
-	module.exports=riot.tag2('router', '<div id="riotcontainer" class="route-container"> <yield></yield> </div> <div id="riotroot" class="riot-root"> </div>', '', '', function(opts) {
+	riot.tag2('router', '<div id="riotcontainer" class="route-container"> <yield></yield> </div> <div id="riotroot" class="riot-root"> </div>', '', '', function(opts) {
 					var self = this;
 					var $appRoot = null;
 					var currTag = null;
@@ -2854,7 +2870,6 @@
 					}
 
 					function changeRoute(newRoute){
-
 							if(typeof(newRoute) === 'string'){
 									createRouteWithTagName(newRoute);
 							} else if (newRoute instanceof Function){
@@ -2862,7 +2877,6 @@
 									if(typeof(result) === 'string'){
 										createRouteWithTagName(newRoute);
 									} else if(result instanceof Promise){
-
 										result.then(tagName  => {
 											createRouteWithTagName(tagName);
 										});
@@ -2881,9 +2895,9 @@
 									path = path.replace(tokenRegExp,'*');
 
 									if(typeof window === 'undefined' && !_isRouteRendedered){
-
 										var serverSidePath = new RegExp(path.replace(/\*/g,'([^/?#]+?)').replace(/\.\./g,'.*')+'$');
 										var loc = self.opts.location || self.parent&&self.parent.opts.location;
+
 										if(serverSidePath.test(loc)){
 											var matches=loc.match(serverSidePath)
 											matches.length&&matches.shift();
@@ -2939,7 +2953,7 @@
 
 	var riot = __webpack_require__(1);
 
-	module.exports=riot.tag2('route', '<yield></yield>', '', '', function(opts) {
+	riot.tag2('route', '<yield></yield>', '', '', function(opts) {
 					this.on('mount',(e) => {
 							if(Object.keys(this.tags).length===0){
 								this.parent && this.parent.setRoute && this.parent.setRoute(this.opts.path, this.opts.component );
@@ -2957,7 +2971,7 @@
 
 	var riot = __webpack_require__(1);
 
-	module.exports=riot.tag2('navigate', '<a href="{document.querySelector(\'router\').getBasePath()+opts.to}" onclick="{nagivateToRoute}"> <yield></yield> </a>', '', '', function(opts) {
+	riot.tag2('navigate', '<a href="{document.querySelector(\'router\').getBasePath()+opts.to}" onclick="{nagivateToRoute}"> <yield></yield> </a>', '', '', function(opts) {
 	        var self = this;
 	        this.nagivateToRoute = function(e){
 	            e.preventDefault();

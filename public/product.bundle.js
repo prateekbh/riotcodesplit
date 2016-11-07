@@ -18,7 +18,7 @@ webpackJsonp([3],{
 
 	var riot = __webpack_require__(1);
 
-	module.exports=riot.tag2('product', '<div class="productinfo" if="{productDesc}"> <div class="productpic"> <img class="pic" riot-src="https://shop.polymer-project.org{productDesc.image}"> </div> <div class="info"> <div class="name"> <span class="label">Name: </span> <span class="desc">{productDesc.title}</span> </div> <div class="price"> <span class="label">Price: </span> <span class="desc">{productDesc.price}</span> </div> </div> </div>', '', '', function(opts) {
+	riot.tag2('product', '<div class="productinfo" if="{productDesc}"> <div class="productpic"> <img class="pic" riot-src="https://shop.polymer-project.org{productDesc.image}"> </div> <div class="info"> <div class="name"> <span class="label">Name: </span> <span class="desc">{productDesc.title}</span> </div> <div class="price"> <span class="label">Price: </span> <span class="desc">{productDesc.price}</span> </div> </div> </div>', '', '', function(opts) {
 			this.productDesc=null;
 			this.on('mount',function(){
 				var productList = [];

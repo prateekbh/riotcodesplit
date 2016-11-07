@@ -18,7 +18,7 @@ webpackJsonp([1],{
 
 	var riot = __webpack_require__(1);
 
-	module.exports=riot.tag2('home', '<div class="homelinks"> <div class="homelink men" onclick="{gotomens}"> <div class="title">Shop for Men</div> <div class="pic"></div> </div> <div class="homelink women" onclick="{gotowomens}"> <div class="title">Shop for Women</div> <div class="pic"></div> </div> </div>', '', '', function(opts) {
+	riot.tag2('home', '<div class="homelinks"> <div class="homelink men" onclick="{gotomens}"> <div class="title">Shop for Men</div> <div class="pic"></div> </div> <div class="homelink women" onclick="{gotowomens}"> <div class="title">Shop for Women</div> <div class="pic"></div> </div> </div>', '', '', function(opts) {
 			this.gotomens=function(){
 				this.gotobrowse('men');
 			}
