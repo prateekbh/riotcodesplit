@@ -6,6 +6,6 @@
 		</svg>
 	</div>
 	<div class="name">
-		<h1><a href="#">Riot Shop</a></h1>
+		<h1><a href="/">Riot Shop</a></h1>
 	</div>
 </header>
