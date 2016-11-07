@@ -20,7 +20,16 @@ app.get("/css/*",(req,res)=>{
 })
 
 app.use(function(req, res, next) {
-  res.render('index',{});
+  var currRouteJs = "";
+  if(req.url === "/"){
+    currRouteJs = "home";
+  } else {
+    currRouteJs = "404";  //not implented in this example
+  }
+
+  res.render('index',{
+    currentRoute: "/public/"+currRouteJs+".bundle.js"
+  });
 });
 
 app.set('port', 8080);
